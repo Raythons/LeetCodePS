@@ -1,0 +1,28 @@
+public class Solution {
+    public IList<IList<string>> GroupAnagrams(string[] strs)
+    {
+        // Each group of anagrams will associate with its own hash key
+        var dict = new Dictionary<string, IList<string>>();
+        
+        foreach (var str in strs)
+        {
+            var key = GetHashKey(str); // Calculating hash key
+            if (dict.TryGetValue(key, out var value))
+                value.Add(str); // Add word to existing group
+            else
+                dict.Add(key, new List<string> { str }); // Create a new group containing current word
+        }
+        return dict.Values.ToList();
+    }
+
+    private string GetHashKey(string s)
+    {
+        // Since word can contain only lowercase English letters we can do this trick.
+        // You need to learn it because it's pretty regular and useful.
+        // Creating an char[26] array for counting letters of the word.
+        var key = new char[26];
+        foreach (var letter in s)
+            key[letter - 'a']++; // This is heart of the trick.
+        return new string(key);
+    }
+}
